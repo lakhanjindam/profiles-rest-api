@@ -6,10 +6,19 @@ from rest_framework.views import APIView
 #from rest_framework.response module import Response
 from rest_framework.response import Response
 
+#. imports from the root directory i.e profiles_project
+from . import serializers
+
+#imports status codes i.e 505, 404
+from rest_framework import status
+
 # Create your views here.
 
 class HelloApiView(APIView):
     '''test api view'''
+
+    #give the access of our serializer by giving the class name of our serializers.py file
+    serializer_class = serializers.HelloSerializer
 
     def get(self, request, format=None):
         '''returns a list of api view features'''
@@ -24,3 +33,36 @@ class HelloApiView(APIView):
         #in APIView return is always in Response
         #Response should be a dictionary format
         return Response({"message":"hello", "an_apiview":an_apiview})
+
+    def post(self, request):
+        '''creates a hello  message with our name'''
+
+        serializer = serializers.HelloSerializer(data=request.data)
+
+        #validate the value entered as name
+        if serializer.is_valid():
+            name = serializer.data.get('name')
+            message = "hello {0}".format(name)
+
+
+            return Response({"message":message})
+
+        else:
+
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk=None):
+        '''handles updating an object and pk is primary key'''
+
+        return Response({"method":"put"})
+
+    def patch(self, request, pk=None):
+        '''partially updates the object i.e only fields provided in requests'''
+
+        return Response({"method":"patch"})
+
+    def delete(self, request, pk=None):
+        ''' deletes an object'''
+
+        return Response({"method":"delete"})
