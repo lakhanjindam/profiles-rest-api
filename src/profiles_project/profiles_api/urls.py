@@ -1,9 +1,8 @@
+from django.conf.urls import url
+
 from django.conf.urls import include
 
-#from router class import DefaultRouter
 from rest_framework.routers import DefaultRouter
-
-from django.conf.urls import url
 
 from .import views
 
@@ -15,6 +14,6 @@ router.register('hello-viewset', views.HelloViewSet, base_name='hello-viewset')
 
 #it firsts checks for the first url, if entered url doesn't match the first then goes to second url.
 urlpatterns = [
-    url(r'^hello-view', views.HelloApiView.as_view()),
+    url(r'^hello-view/', views.HelloApiView.as_view()),
     url(r'', include(router.urls))
 ]
