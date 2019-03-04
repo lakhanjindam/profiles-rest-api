@@ -12,6 +12,8 @@ from . import serializers
 #imports status codes i.e 505, 404
 from rest_framework import status
 
+#base model for all the viewsets django has
+from rest_framework import viewsets
 # Create your views here.
 
 class HelloApiView(APIView):
@@ -58,7 +60,7 @@ class HelloApiView(APIView):
         return Response({"method":"put"})
 
     def patch(self, request, pk=None):
-        '''partially updates the object i.e only fields provided in requests'''
+        '''partially updates the object i.e only fields p   rovided in requests'''
 
         return Response({"method":"patch"})
 
@@ -66,3 +68,19 @@ class HelloApiView(APIView):
         ''' deletes an object'''
 
         return Response({"method":"delete"})
+
+class HelloViewSet(viewsets.ViewSet):
+    '''test api view set'''
+    '''view set doesn't use traditional http methods for their function name'''
+
+    def list(self, request):
+        '''return a hello message'''
+
+        a_viewset = [
+        "uses action(list, creates, update, retreive, partial_update)",
+        "automatically maps to urlsusing routers",
+        "proivdes more functionality with less code"
+        ]
+
+        return Response({"message":"Hello!", "a_viewset":a_viewset
+        })
