@@ -15,6 +15,7 @@ from . import serializers
 #imports status codes i.e 505, 404
 from rest_framework import status
 
+from . import models
 # Create your views here.
 
 class HelloApiView(APIView):
@@ -107,6 +108,7 @@ class HelloViewSet(viewsets.ViewSet):
             )
 
     #make sure name of every function is correcct otherwise it gives error.
+
     def retrieve(self, request, pk=None):
         '''handles getting an object by it's ID'''
 
@@ -126,3 +128,11 @@ class HelloViewSet(viewsets.ViewSet):
         '''handles removing an object'''
 
         return Response({"http_method":"DELETE"})
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    '''handles logic for creating, reading and updating profiles'''
+
+    serializer_class = serializers.UserProfileSerializer
+    #now create queryset to which tells the viewset how to retrieve the objects from our database.
+    #used to list all the objects from our 
+    queryset = models.UserProfile.objects.all()
