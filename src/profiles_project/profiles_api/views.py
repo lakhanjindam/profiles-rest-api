@@ -22,6 +22,8 @@ from . import models
 
 from . import permissions
 
+from rest_framework import filters
+
 class HelloApiView(APIView):
     '''test api view'''
 
@@ -143,5 +145,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     #create authentication_classes using a tuple bcoz tuple is immutable i.e can't be changed or set.
     #now also add permission_classes
+    #add "," to end of tuple so that python can identify it's a tuple.
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.UpdateOwnProfile,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name','email',)
