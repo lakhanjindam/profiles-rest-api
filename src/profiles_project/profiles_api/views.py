@@ -15,8 +15,12 @@ from . import serializers
 #imports status codes i.e 505, 404
 from rest_framework import status
 
+from rest_framework.authentication import TokenAuthentication
+
 from . import models
 # Create your views here.
+
+from . import permissions
 
 class HelloApiView(APIView):
     '''test api view'''
@@ -134,5 +138,10 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = serializers.UserProfileSerializer
     #now create queryset to which tells the viewset how to retrieve the objects from our database.
-    #used to list all the objects from our 
+    #used to list all the objects from our
     queryset = models.UserProfile.objects.all()
+
+    #create authentication_classes using a tuple bcoz tuple is immutable i.e can't be changed or set.
+    #now also add permission_classes
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile,)
