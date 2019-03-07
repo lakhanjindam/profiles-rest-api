@@ -24,6 +24,11 @@ from . import permissions
 
 from rest_framework import filters
 
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+
+from rest_framework.authtoken.views import ObtainAuthToken
+
+
 class HelloApiView(APIView):
     '''test api view'''
 
@@ -150,3 +155,14 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name','email',)
+
+class LoginViewSet(viewsets.ViewSet):
+    '''checks email and password and returns auth token'''
+
+    serializer_class = AuthTokenSerializer
+
+    '''now we want to post our data to viewset so that it can be authenticated'''
+    def create(self, request):
+        '''use the ObtainAuthToken APIView to validate and create a token'''
+
+        return ObtainAuthToken().post(request)

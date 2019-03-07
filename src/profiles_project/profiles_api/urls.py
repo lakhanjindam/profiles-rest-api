@@ -16,6 +16,9 @@ router.register('hello-viewset', views.HelloViewSet, base_name='hello-viewset')
 #django rest_framework automatically figures this out by looking at model specified
 router.register('profile', views.UserProfileViewSet)
 
+#here base_name is required bcoz it is not a model view set and we need to tell django it's base_name.
+router.register('login', views.LoginViewSet, base_name='login')
+
 #it firsts checks for the first url, if entered url doesn't match the first then goes to second url.
 urlpatterns = [
     url(r'^hello-view/', views.HelloApiView.as_view()),
