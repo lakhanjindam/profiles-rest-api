@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 
-
+#UserProfileManager is already built-in model of django rest_framework.
 class UserProfileManager(BaseUserManager):
     """Class required by Django for managing our users from the management
     command.
@@ -52,7 +52,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)#for super admin access.
 
     objects = UserProfileManager()
 
@@ -77,3 +77,21 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """What to show when we output an object as a string."""
 
         return self.email
+
+#it's like an custom model unlike other models we described above.
+#models.Model is a base for creating any model.
+class ProfileFeedItem(models.Model):
+    '''updates profile feed item'''
+
+    user_profile = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
+    #to add text in status field.
+    #Note: CharField always require a max_length attribute, 255 is max char limit.
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    '''last step is to convert a model object into string'''
+
+    def __str__(self):
+        '''returns our model as striing as an ouput.'''
+        
+        return self.status_text

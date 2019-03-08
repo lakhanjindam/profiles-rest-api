@@ -4,3 +4,4 @@ from . import models
 
 #registering your model in django admin
 admin.site.register(models.UserProfile)
+admin.site.register(models.ProfileFeedItem)
