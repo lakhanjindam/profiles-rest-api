@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from . import models
 
-#from class serializers import Serializer object
+#from class serializers import Serializer object and is a base serializer.
 class HelloSerializer(serializers.Serializer):
     '''Serializes a name field for testing our api view'''
 
@@ -9,7 +9,7 @@ class HelloSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=10)
 
 
-#creating a model serializer for our user profiles
+#creating a model serializer for our user profiles.
 class UserProfileSerializer(serializers.ModelSerializer):
      '''a serializer for user profile object'''
 
@@ -39,3 +39,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
          user.save()
 
          return user
+
+class ProfileFeedItemSerializer(serializers.ModelSerializer):
+    '''a serializer for profile-feed-item'''
+
+    class Meta:
+
+        model = models.ProfileFeedItem
+        fields = ('id','user_profile','status_text','created_on')
+
+        #set this so that users can only read feeds of other users.
+        extra_kwargs = {
+        'user_profile':{'read_only':True}
+
+        }

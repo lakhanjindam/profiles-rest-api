@@ -28,6 +28,11 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from rest_framework.authtoken.views import ObtainAuthToken
 
+#if user is authenticated then user can do whatever he wants and if not he can read only!!.
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+#similar to upperone but user have to register in order to view profile.
+from rest_framework.permissions import IsAuthenticated
 
 class HelloApiView(APIView):
     '''test api view'''
@@ -82,6 +87,7 @@ class HelloApiView(APIView):
 
         return Response({"method":"delete"})
 
+#for normal viewset "viewsets.ViewSet" is used.
 class HelloViewSet(viewsets.ViewSet):
     '''test api view set'''
     '''view set doesn't use traditional http methods for their function name'''
@@ -140,12 +146,14 @@ class HelloViewSet(viewsets.ViewSet):
 
         return Response({"http_method":"DELETE"})
 
+
+#this is used for creating a model viewset.
 class UserProfileViewSet(viewsets.ModelViewSet):
     '''handles logic for creating, reading and updating profiles'''
 
     serializer_class = serializers.UserProfileSerializer
     #now create queryset to which tells the viewset how to retrieve the objects from our database.
-    #used to list all the objects from our
+    #used to list all the objects from our models.py file.
     queryset = models.UserProfile.objects.all()
 
     #create authentication_classes using a tuple bcoz tuple is immutable i.e can't be changed or set.
@@ -156,6 +164,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name','email',)
 
+#here LoginViewSet is an APIView so we are inheriting just ViewSet instead of ModelViewSet.
 class LoginViewSet(viewsets.ViewSet):
     '''checks email and password and returns auth token'''
 
@@ -166,3 +175,19 @@ class LoginViewSet(viewsets.ViewSet):
         '''use the ObtainAuthToken APIView to validate and create a token'''
 
         return ObtainAuthToken().post(request)
+
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    '''handles creating, reading and updating profile feed items.'''
+
+    #reason for adding Authentication first is to validate the user which tries to update feeds.
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.ProfileFeedItemSerializer
+    queryset = models.ProfileFeedItem.objects.all()
+
+    #note that it's not a tuple as we have not added "," to end of it.
+    permission_classes = (permissions.PostOwnStatus, IsAuthenticated)
+
+    def perform_create(self, serializer):
+        '''sets the user profile to the logged in user.'''
+
+        serializer.save(user_profile=self.request.user)
